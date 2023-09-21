@@ -165,3 +165,41 @@ services:
       KAFKA_REST_BOOTSTRAP_SERVERS: 'broker:29092'
       KAFKA_REST_LISTENERS: "http://0.0.0.0:8082"
       KAFKA_REST_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
+
+  postgresql:
+    image: postgres:14
+    hostname: postgresql
+    environment:
+      POSTGRES_DB: "conduktor-platform"
+      POSTGRES_USER: "conduktor"
+      POSTGRES_PASSWORD: "change_me"
+
+  conduktor-platform:
+    image: conduktor/conduktor-platform:1.18.0
+    depends_on:
+      - postgresql
+      - ksqldb-server
+      - broker
+      - schema-registry
+      - connect
+    ports:
+      - "8080:8080"
+    volumes:
+      - type: bind
+        source: ./conduktor-config.yml
+        target: /opt/conduktor/platform-config.yaml
+        read_only: true
+    environment:
+      CDK_IN_CONF_FILE: /opt/conduktor/platform-config.yaml
+      CDK_CLUSTERS_0_ID: "default"
+      CDK_CLUSTERS_0_NAME: "My Local Kafka Cluster"
+      CDK_CLUSTERS_0_COLOR: "#0013E7"
+      CDK_CLUSTERS_0_BOOTSTRAPSERVERS: "PLAINTEXT://broker:29092"
+      CDK_CLUSTERS_0_SCHEMAREGISTRY_URL: "http://schema-registry:8081"
+      CDK_CLUSTERS_0_KAFKACONNECTS_0_URL: "http://connect:8083"
+      CDK_CLUSTERS_0_KAFKACONNECTS_0_NAME: "full stack kafka connect"
+
+  conduktor-monitoring:
+    image: conduktor/conduktor-platform-cortex:1.18.0
+    environment:
+      CDK_CONSOLE-URL: "conduktor-platform:8080"
