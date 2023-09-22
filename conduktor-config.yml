@@ -10,7 +10,7 @@ database:
   connection_timeout: 30 # in seconds
 
 admin:
-  email: "terence@synthesis.co.za"
+  email: "terence@conduktor-admin.io"
   password: "admin"
 
 auth:
