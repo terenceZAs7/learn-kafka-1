@@ -1,0 +1,17 @@
+out
+server
+node_modules
+*.vsix
+.DS_Store
+.vscode-test
+undefined
+target
+dist
+jre
+lombok
+bin/
+.settings
+.classpath
+.project
+**/.vscode
+.gradle/
