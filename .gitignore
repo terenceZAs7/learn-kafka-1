@@ -15,3 +15,5 @@ bin/
 .project
 **/.vscode
 .gradle/
+build/*
+!build/build.xml
